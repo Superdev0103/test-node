@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF">
+        <meta http-equiv="X-UA-Compatible" content="IE-edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Connect</title>
+    </head>
+    <body>
+        <input type="text" id="message" placeholder="Write your text">
+        <button onclick="sendMessage()">Send Message</button>
+        <button id="connect" onclick="myFunction()">Connect</button>
+    </body>
+    <script>
+        var cookie = "";
+        function myFunction() {
+            console.log(cookie)
+            if (cookie.length === 0) {
+                const d = new Date();
+                d.setTime(d.getTime() + (1*24*60*60*1000));
+                let expires = "expires="+ d.toUTCString();
+                cookie = expires;
+            }
+            const xhttp = new XMLHttpRequest();
+            xhttp.onload = function() {
+                if (document.getElementById('connect').innerText == "Connect") {
+                    document.getElementById('connect').innerText="Disconnect";
+                } else {
+                    document.getElementById('connect').innerText="Connect";
+                }
+            }
+            xhttp.open("POST", "http://localhost:3123/connect");
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhttp.send(cookie);
+        }
+        function sendMessage() {
+            if (cookie.length === 0) {
+                const d = new Date();
+                d.setTime(d.getTime() + (1*24*60*60*1000));
+                let expires = "expires="+ d.toUTCString();
+                cookie = expires;
+            }
+            const xhttp = new XMLHttpRequest();
+            xhttp.onload = function() {
+                document.getElementById('connect').innerText="Disconnect";
+            }
+            xhttp.open("POST", "http://localhost:3123");
+            xhttp.setRequestHeader("Accept", "application/json");
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            let data = {
+                "cookie": cookie,
+                "data": document.getElementById("message").value
+            }
+            xhttp.send(cookie + "||" + document.getElementById("message").value);
+        }
+    </script>
+</html>
